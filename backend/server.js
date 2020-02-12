@@ -16,7 +16,8 @@ mongoose
     .then(() => console.log("MongoDB connected..."))
     .catch(err => console.log(err));
 
-// app.use('/api/users', require('./routes/users'));
+app.use('/api/register', require('./routes/register'));
+app.use('/api/auth', require('./routes/auth'));
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static('../frontend'));
