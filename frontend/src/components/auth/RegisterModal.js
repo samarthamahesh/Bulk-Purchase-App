@@ -10,64 +10,112 @@ import {
     Label,
     Input,
     NavLink,
-    Alert
+    Alert,
+    ModalFooter
 } from 'reactstrap';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { register } from '../../actions/authAction';
+import { clearErrors } from '../../actions/msgActions';
+import { REGISTER_FAIL, REGISTER_SUCCESS, GET_SUCCESS, GET_ERRORS } from '../../actions/actionTypes';
 
 class RegisterModal extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props);
         this.state = {
-            modal: false,
+            isOpen: false,
             name: "",
             email: "",
             password: "",
             isVendor: null,
             msg: null
-        }
+        };
         this.toggleModal = this.toggleModal.bind(this);
         this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
         this.onSelect = this.onSelect.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
+    static propTypes = {
+        isAuthenticated: PropTypes.bool,
+        msg: PropTypes.object.isRequired,
+        register: PropTypes.func.isRequired,
+        clearErrors: PropTypes.func.isRequired
+    };
+
     toggleModal() {
+        this.props.clearErrors();
         this.setState({
-            modal: !this.state.modal
+            isOpen: !this.state.isOpen,
+            name: "",
+            email: "",
+            password: "",
+            isVendor: null,
+            msg: null,
+            ismsgError: null
         });
     }
 
     onChange(e) {
-        this.setState({[e.target.name]: e.target.value})
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
 
     onSelect(e) {
-        this.setState({isVendor: e.target.value === 'Vendor' ? true : false});
-        console.log(this.state.isVendor);
+        this.setState({
+            isVendor: e.target.value === 'Vendor' ? true : false
+        });
+    }
+
+    componentDidUpdate(prevProps) {
+        const msg = this.props.msg;
+        if(msg !== prevProps.msg) {
+            if (msg.isError === true && msg.id == GET_ERRORS) {
+                this.setState({ msg: msg.msg.msg, ismsgError: true });
+            } else if (msg.isError === false && msg.id == GET_SUCCESS) {
+                this.setState({ msg: msg.msg.msg, ismsgError: false })
+            } else {
+                this.setState({ msg: null, ismsgError: null })
+            }
+        }
     }
 
     onSubmit(e) {
         e.preventDefault();
 
-        const { name, email, password } = this.state;
-
         const newUser = {
-            name,
-            email,
-            password
-        }
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password,
+            isVendor: this.state.isVendor
+        };
+
+        this.props.register(newUser);
+
+        document.getElementById('register_form').reset();
     }
 
     render() {
+        var statusBar;
+        if(this.state.msg) {
+            if(this.state.ismsgError) {
+                statusBar = <Alert color='danger'>{ this.state.msg }</Alert>
+            } else {
+                statusBar = <Alert color='success'>{ this.state.msg }</Alert>
+            }
+        } else {
+            statusBar = ''
+        }
+
         return(
             <div>
                 <NavLink onClick={this.toggleModal} href='#'>Register</NavLink>
-                <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                <Modal isOpen={this.state.isOpen} size='lg' toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Register</ModalHeader>
                     <ModalBody>
-                        {this.state.msg ? (
-                            <Alert color='danger'>{this.state.msg}</Alert>
-                        ) : null}
-                        <Form onSubmit={this.onSubmit}>
+                        { statusBar }
+                        <Form onSubmit={this.onSubmit} id='register_form'>
                             <FormGroup>
                                 <Label for='name'>Name</Label>
                                 <Input
@@ -82,7 +130,7 @@ class RegisterModal extends Component {
                             <FormGroup>
                                 <Label for='email'>Email</Label>
                                 <Input
-                                    type='text'
+                                    type='email'
                                     name='email'
                                     id='email'
                                     placeholder='Email'
@@ -93,7 +141,7 @@ class RegisterModal extends Component {
                             <FormGroup>
                                 <Label for='password'>Password</Label>
                                 <Input
-                                    type='text'
+                                    type='password'
                                     name='password'
                                     id='password'
                                     placeholder='Password'
@@ -123,18 +171,26 @@ class RegisterModal extends Component {
                                     Vendor
                                 </Label>
                             </FormGroup>
-                            <Input
-                                type='submit'
-                                name='submit'
-                                id='submit'
-                                value='Submit'
-                            />
                         </Form>
                     </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={ this.onSubmit }>Submit</Button>
+                        <Button color="secondary" onClick={ this.toggleModal }>Cancel</Button>
+                    </ModalFooter>
                 </Modal>
             </div>
         );
     }
-}
+};
 
-export default RegisterModal;
+const mapStateToProps = function(state) {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+        msg: state.msg
+    }
+};
+
+export default connect(
+    mapStateToProps,
+    { register, clearErrors }
+)(RegisterModal);

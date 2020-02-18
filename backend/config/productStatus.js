@@ -1,0 +1,11 @@
+const WAITING = 0;
+const DISPATCH_READY = 1;
+const DISPATCHED = 2;
+const DELETED = 3;
+
+module.exports = {
+    WAITING: WAITING,
+    DISPATCH_READY: DISPATCH_READY,
+    DISPATCHED: DISPATCHED,
+    DELETED: DELETED,
+}

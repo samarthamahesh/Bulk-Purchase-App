@@ -1,10 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const passport = require('passport');
+const cors = require('cors')
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 const mongoURI = "mongodb://127.0.0.1:27017/bulk_purchase_app";
 
@@ -16,8 +19,13 @@ mongoose
     .then(() => console.log("MongoDB connected..."))
     .catch(err => console.log(err));
 
-app.use('/api/register', require('./routes/register'));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/product', require('./routes/product'));
+app.use('/api/order', require('./routes/order'));
+
+app.use(passport.initialize());
+
+require('./config/passport')(passport);
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static('../frontend'));
@@ -27,7 +35,7 @@ if(process.env.NODE_ENV === 'production') {
     });
 }
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

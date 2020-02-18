@@ -22,6 +22,16 @@ var User = new Schema({
     isVendor: {
         type: Boolean,
         required: true
+    },
+    rating_sum: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    total_ratings: {
+        type: Number,
+        required: false,
+        default: 0
     }
 });
 

@@ -1,0 +1,11 @@
+const WAITING = 0;
+const PLACED = 1;
+const DISPATCHED = 2;
+const CANCELLED = 3;
+
+module.exports = {
+    WAITING: WAITING,
+    PLACED: PLACED,
+    DISPATCHED: DISPATCHED,
+    CANCELLED: CANCELLED
+}
