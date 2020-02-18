@@ -193,7 +193,7 @@ class CustomerView extends Component {
             review: this.state.review
         }
 
-        axios.post('http://localhost:4000/api/order/submitreview', body)
+        axios.post('http://localhost:5000/api/order/submitreview', body)
         this.setState({
             reviewsubmitted: true,
             reviewmsg: 'Review Submitted, Thank You'
@@ -238,7 +238,7 @@ class CustomerView extends Component {
         this.setState({
             editSubmitted: true
         })
-        axios.post('http://localhost:4000/api/order/edit', body)
+        axios.post('http://localhost:5000/api/order/edit', body)
             .then(result => {
                 console.log("SUCCESS")
                 this.props.listOrderedProducts(this.props.user);
@@ -348,7 +348,7 @@ class CustomerView extends Component {
         const user = this.props.user;
 
         axios
-            .post('http://localhost:4000/api/order/updateVendorRating', obj)
+            .post('http://localhost:5000/api/order/updateVendorRating', obj)
             .then(this.starToggle())
             .then(this.props.listOrderedProducts(user))
     }

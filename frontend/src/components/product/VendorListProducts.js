@@ -36,7 +36,7 @@ class VendorListProducts extends Component {
     }
 
     listReviews(product) {
-        axios.get(`http://localhost:4000/api/product/reviews/${product._id}`)
+        axios.get(`http://localhost:5000/api/product/reviews/${product._id}`)
             .then(res => {
                 this.setState({
                     reviews: res.data.reviews
