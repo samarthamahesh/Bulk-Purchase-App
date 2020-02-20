@@ -10,7 +10,6 @@ function auth_middleware(req, res, next) {
         const decrypted = jwt.verify(token, "thisissecret");
 
         req.user = decrypted;
-        console.log(decrypted);
         next();
     } catch(e) {
         res.status(400).json({ msg: "Token is invalid" })
