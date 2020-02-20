@@ -266,8 +266,8 @@ class CustomerView extends Component {
 
     sortRating() {
         this.state.cardItems.sort((a, b) => {
-            var x = a['vendor.rating_sum'] / a['vendor.total_ratings'];
-            var y = b['vendor.rating_sum'] / b['vendor.total_ratings'];
+            var x = a.vendor.rating_sum / a.vendor.total_ratings;
+            var y = b.vendor.rating_sum / b.vendor.total_ratings;
             return ((x<y) ? -1 : ((x>y) ? 1 : 0));
         });
     }
