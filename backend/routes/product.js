@@ -57,12 +57,9 @@ router.post('/dispatch', (req, res) => {
         )
         .exec(
             function updateOrder(err, result1) {
-                console.log("INSIDE 1")
                 Product.find({_id: product._id})
                     .exec(function(err, pr) {
-                        console.log("Inside 2")
                         if(pr[0].status == productStatus.DISPATCH_READY) {
-                            console.log("PLACED")
                             Order.updateMany(
                                 {'product._id': String(pr[0]._id)},
                                 {
@@ -75,7 +72,6 @@ router.post('/dispatch', (req, res) => {
                                 console.log(ret)
                             })
                         } else if(pr[0].status == productStatus.DISPATCHED) {
-                            console.log("DISPATCHED")
                             Order.updateMany(
                                 {'product._id': String(pr[0]._id)},
                                 {
@@ -88,7 +84,6 @@ router.post('/dispatch', (req, res) => {
                                 console.log(ret)
                             })
                         } else if(pr[0].status == productStatus.DELETED) {
-                            console.log("DELETED")
                             Order.updateMany(
                                 {'product._id': String(pr[0]._id)},
                                 {
@@ -139,6 +134,9 @@ router.post('/unordered', (req, res) => {
                 product_name: product_name,
                 _id : {
                     $nin: arr
+                },
+                bundle_quantity: {
+                    $gt: 0
                 }
             })
             .then(result => {
@@ -184,6 +182,16 @@ router.get('/reviews/:id', (req, res) => {
         .then(result => {
             res.json({
                 reviews: result[0].reviews
+            })
+        })
+})
+
+router.get('/vendorReviews/:id', (req, res) => {
+    const vendor_id = req.params.id;
+    Product.find({'vendor._id': vendor_id}, 'product_name reviews rating_sum total_ratings')
+        .then(result => {
+            res.json({
+                reviews: result
             })
         })
 })

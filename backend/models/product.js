@@ -23,8 +23,12 @@ var Product = new Schema({
         type: Number,
         default: productStatus.WAITING
     },
-    rating: {
-        type: Object,
+    rating_sum: {
+        type: Number,
+        required: false
+    },
+    total_ratings: {
+        type: Number,
         required: false
     },
     reviews: {

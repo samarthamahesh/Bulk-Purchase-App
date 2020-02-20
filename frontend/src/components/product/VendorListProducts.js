@@ -13,7 +13,7 @@ class VendorListProducts extends Component {
             products: null,
             product_status: null,
             selected_product_id: null,
-            reviewModal: false
+            reviewModal: false,
         }
 
         this.dispatchProduct = this.dispatchProduct.bind(this);
@@ -30,8 +30,8 @@ class VendorListProducts extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            product_status: nextProps.product.product_status,
-            products: nextProps.product.search_products
+            product_status: nextProps.product.result.product_status,
+            products: nextProps.product.result.search_products
         });
     }
 
@@ -74,7 +74,11 @@ class VendorListProducts extends Component {
     delete(e) {
         const product = this.state.products.find(element => element._id === e.target.value);
         this.props.statusProduct(product, PRODUCT_DELETED);
-        this.props.listProducts('vendor._id', this.props.auth.user._id, PRODUCT_WAITING)
+        if(this.state.product_status === PRODUCT_WAITING) {
+            this.props.listProducts('vendor._id', this.props.auth.user._id, PRODUCT_WAITING)
+        } else if(this.state.product_status === PRODUCT_DISPATCH_READY) {
+            this.props.listProducts('vendor._id', this.props.auth.user._id, PRODUCT_DISPATCH_READY)
+        }
     }
 
     render() {
@@ -104,6 +108,7 @@ class VendorListProducts extends Component {
                                     <CardText>Product Name : <strong>{ product.product_name }</strong></CardText>
                                     <CardText>Product Bundle Price : <strong>{ product.bundle_price }</strong></CardText>
                                     <Button color='info' value={ product._id } className='float-left' onClick={this.dispatchProduct}>Dispatch</Button>
+                                    <Button color='danger' value={ product._id } className='float-right' onClick={this.delete}>Delete</Button>
                                 </CardBody>
                             </Card>
                         </Col>

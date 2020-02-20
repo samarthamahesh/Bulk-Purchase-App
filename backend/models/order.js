@@ -27,10 +27,10 @@ var Order = new Schema({
         type: Boolean,
         default: false
     },
-    product_review: {
+    product_rating: {
         type: Boolean,
         default: false
-    }
+    },
 });
 
 module.exports = mongoose.model('order', Order);

@@ -51,7 +51,7 @@ export default function(state = initialState, action) {
         case REGISTER_FAIL:
             localStorage.removeItem('token');
             return {
-                ...state,
+                state: undefined,
                 isAuthenticated: false,
                 user: null,
                 token: null,

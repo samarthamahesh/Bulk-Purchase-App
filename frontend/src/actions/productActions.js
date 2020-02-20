@@ -6,7 +6,8 @@ import {
     GET_SUCCESS,
     GET_PRODUCTS,
     ORDER_SUCCESS,
-    ORDER_FAIL
+    ORDER_FAIL,
+    GET_ORDERS
 } from './actionTypes';
 import {
     returnErrors,
@@ -63,14 +64,11 @@ export const orderProduct = (order) => dispatch => {
 
     const body = JSON.stringify(order);
 
-    console.log("ORDERING   ")
     axios.post("http://localhost:5000/api/order", body, config)
         .then(res => {
-            console.log("THEN order")
             dispatch(returnSuccess(res.data, res.status, ORDER_SUCCESS))
         })
         .catch(err => {
-            console.log("CATCH order")
             dispatch(returnErrors(err.response.data, err.response.status, ORDER_FAIL));
         })
 }
@@ -109,7 +107,7 @@ export const listUnorderedProducts = (product_name, user) => dispatch => {
     axios.post('http://localhost:5000/api/product/unordered', body, config)
         .then(res => {
             dispatch({
-                type: GET_PRODUCTS,
+                type: GET_ORDERS,
                 payload: res.data
             });
         })
@@ -129,7 +127,7 @@ export const listOrderedProducts = (user) => dispatch => {
     axios.post('http://localhost:5000/api/order/list', body, config)
         .then(res => {
             dispatch({
-                type: GET_PRODUCTS,
+                type: GET_ORDERS,
                 payload: res.data
             });
         })

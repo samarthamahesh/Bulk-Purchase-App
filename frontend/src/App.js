@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AppNavBar from './components/navbar';
 import VendorMenuBar from './components/product/VendorMenuBar';
 import CustomerView from './components/product/CustomerView';
+import Welcome from './components/Welcome';
 import { connect } from 'react-redux';
 import store from './store';
 import PropTypes from 'prop-types';
@@ -33,6 +34,8 @@ class App extends Component {
       } else {
         renderView = <CustomerView/>
       }
+    } else {
+      renderView = <Welcome/>
     }
 
     return (

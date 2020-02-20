@@ -39,7 +39,10 @@ class CustomerView extends Component {
             review: null,
             reviewsubmitted: null,
             reviewmsg: null,
-            editSubmitted: false
+            editSubmitted: false,
+            vendorModal: false,
+            selectedVendorReview: null,
+            vendorReviews: null
         }
 
         this.onChange = this.onChange.bind(this);
@@ -57,9 +60,13 @@ class CustomerView extends Component {
         this.update = this.update.bind(this);
         this.convertToName = this.convertToName.bind(this);
         this.starToggle = this.starToggle.bind(this);
+        this.productstarToggle = this.productstarToggle.bind(this);
         this.changeRating = this.changeRating.bind(this);
+        this.changeproductRating = this.changeproductRating.bind(this);
+        this.submitproductRating = this.submitproductRating.bind(this);
         this.submitRating = this.submitRating.bind(this);
         this.updateStarModal = this.updateStarModal.bind(this);
+        this.updateproductStarModal = this.updateproductStarModal.bind(this);
         this.editorder = this.editorder.bind(this);
         this.onChangeEditQuantity = this.onChangeEditQuantity.bind(this);
         this.openeditModal = this.openeditModal.bind(this);
@@ -67,6 +74,9 @@ class CustomerView extends Component {
         this.reviewModalToggle = this.reviewModalToggle.bind(this);
         this.onChangeReview = this.onChangeReview.bind(this);
         this.submitreview = this.submitreview.bind(this);
+        this.updateVendorModal = this.updateVendorModal.bind(this);
+        this.toggleVendor = this.toggleVendor.bind(this);
+        this.listReviews = this.listReviews.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -84,12 +94,10 @@ class CustomerView extends Component {
 
     openReviewModal(e) {
         const order = this.state.orderItems.find(ele => ele._id === e.target.value)
-        console.log(order)
         this.setState({
             review_isopen: true,
             selectedrevieworder: order
         })
-        console.log(this.state.selectedrevieworder)
     }
 
     onChange(e) {
@@ -139,7 +147,9 @@ class CustomerView extends Component {
             placed: null,
             searchButton: null,
             star_isopen: false,
+            productstar_isopen: null,
             vendor_rating: null,
+            product_rating: null,
             diff: null,
             selectededitorder: null,
             review_isopen: null,
@@ -151,15 +161,17 @@ class CustomerView extends Component {
     }
     
     componentWillReceiveProps(nextProps) {
-        if(this.state.searchButton) {
-            this.setState({
-                cardItems: nextProps.product.search_products
-            });
-        } else if(!this.state.searchButton) {
-            this.setState({
-                orderItems: nextProps.product.orders
-            })
+        if(nextProps.product.result) {
+            if(this.state.searchButton) {
+                this.setState({
+                    cardItems: nextProps.product.result.search_products
+                });
+            } else if(!this.state.searchButton) {
+                this.setState({
+                    orderItems: nextProps.product.result.orders
+                })
 
+            }
         }
     }
 
@@ -240,7 +252,6 @@ class CustomerView extends Component {
         })
         axios.post('http://localhost:5000/api/order/edit', body)
             .then(result => {
-                console.log("SUCCESS")
                 this.props.listOrderedProducts(this.props.user);
             })
     }
@@ -281,7 +292,6 @@ class CustomerView extends Component {
             editModal_isOpen: true,
             selectededitorder: order
         })
-        console.log(this.state.selectededitorder)
     }
 
     update(product) {
@@ -315,8 +325,14 @@ class CustomerView extends Component {
         })
     }
 
+    productstarToggle() {
+        this.setState({
+            productstar_isopen: !this.state.productstar_isopen,
+            product_rating: null
+        })
+    }
+
     reviewModalToggle() {
-        console.log(this.state.selectedrevieworder)
         this.setState({
             review_isopen: !this.state.review_isopen,
             reviewsubmitted: false
@@ -331,9 +347,23 @@ class CustomerView extends Component {
         this.starToggle()
     }
 
+    updateproductStarModal(e) {
+        const order = this.state.orderItems.find(ele => ele._id === e.target.value)
+        this.setState({
+            selectedorder: order
+        })
+        this.productstarToggle()
+    }
+
     changeRating(newRating, prevValue, name) {
         this.setState({
             vendor_rating: newRating
+        })
+    }
+
+    changeproductRating(newRating, prevValue, name) {
+        this.setState({
+            product_rating: newRating
         })
     }
 
@@ -344,13 +374,50 @@ class CustomerView extends Component {
         obj['rating'] = this.state.vendor_rating;
         obj['vendor_id'] = this.state.selectedorder.product.vendor._id;
 
-        console.log(obj);
         const user = this.props.user;
 
         axios
             .post('http://localhost:5000/api/order/updateVendorRating', obj)
             .then(this.starToggle())
             .then(this.props.listOrderedProducts(user))
+    }
+
+    submitproductRating(e) {
+        var obj = {}
+
+        obj['order'] = this.state.selectedorder;
+        obj['rating'] = this.state.product_rating;
+
+        const user = this.props.user;
+
+        axios
+            .post('http://localhost:5000/api/order/updateProductRating', obj)
+            .then(this.productstarToggle())
+            .then(this.props.listOrderedProducts(user))
+    }
+
+    listReviews(vendor) {
+        axios.get(`http://localhost:5000/api/product/vendorReviews/${vendor._id}`)
+            .then(res => {
+                this.setState({
+                    vendorReviews: res.data.reviews
+                })
+            })
+    }
+
+    updateVendorModal(e) {
+        const vendor = this.state.cardItems.find(ele => ele.vendor._id === e.target.value).vendor
+        this.setState({
+            vendorModal: true,
+            selectedVendorReview: vendor
+        })
+        this.listReviews(vendor)
+    }
+
+    toggleVendor() {
+        this.setState({
+            vendorModal: !this.state.vendorModal
+        })
     }
 
     render() {
@@ -384,7 +451,8 @@ class CustomerView extends Component {
                                 />
                                 ({(product.vendor.rating_sum / product.vendor.total_ratings).toFixed(3)})
                             </CardText> : ''}
-                            <Button color='info' value={ product._id } onClick={ this.updateSelectedModal }>Order</Button>
+                            <Button color='info' value={ product._id } onClick={ this.updateSelectedModal } className='float-left'>Order</Button>
+                            <Button color='warning' value={ product.vendor._id } onClick={ this.updateVendorModal } className='float-right'>Vendor Products Reviews</Button>
                         </CardBody>
                     </Card>
                 </Col>
@@ -410,9 +478,16 @@ class CustomerView extends Component {
                             </CardText> : ''}
                             { order.status ===  ORDER_WAITING ? <CardText>Product Bundle Quantity Left : <strong>{ order.product.bundle_quantity }</strong></CardText> : ''}
                             { order.status === ORDER_WAITING ? <Button className='mb-3' color='warning' value={ order._id } onClick={this.openeditModal}>Edit Order</Button> : ''}
-                            <br/>
-                            { !order.vendor_rating ? <Button className='float-left' value={order._id} color='info' onClick={this.updateStarModal}>Rate the vendor</Button> : ''}
-                            { order.status === ORDER_DISPATCHED && !order.product_review ? <Button className='float-right' color='info' value={order._id} onClick={this.openReviewModal}>Add a product review</Button> : ''}
+                            <br/><br/>
+                            <CardText>
+                                { order.status === ORDER_DISPATCHED && !order.product_rating ? <Button className='mb-3 float-left' color='info' value={ order._id } onClick={this.updateproductStarModal}>Rate Product</Button> : ''}
+                                { order.status === ORDER_DISPATCHED && !order.product_review ? <Button className='float-right' color='info' value={order._id} onClick={this.openReviewModal}>Add a Product Review</Button> : ''}
+                            </CardText>
+                            <br/><br/>
+                            <CardText>
+                                { !order.vendor_rating ? <Button className='float-left' value={order._id} color='info' onClick={this.updateStarModal}>Rate the Vendor</Button> : ''}
+                                { !order.vendor_review ? <Button className='float-right' color='info' value={order._id} onClick={this.openvendorReviewModal}>Add a Vendor Review</Button> : ''}
+                            </CardText>
                         </CardBody>
                     </Card>
                 </Col>
@@ -538,9 +613,52 @@ class CustomerView extends Component {
             starrating = '';
         }
 
+        var productstarrating;
+        if(this.state.selectedorder) {
+            if(!this.state.selectedorder.product_rating) {
+                productstarrating = (
+                    <Fragment>
+                        <StarRatingComponent
+                            name='product_rating'
+                            starCount={5}
+                            value={this.state.product_rating}
+                            onStarClick={this.changeproductRating}
+                            />
+                        <br/>
+                        <Button color='primary' onClick={this.submitproductRating}>Submit</Button>
+                    </Fragment>
+                )
+            } else {
+                productstarrating = '';
+            }
+        } else {
+            productstarrating = '';
+        }
+
         var editMessage;
         if(this.state.editSubmitted) {
             editMessage = <Alert color='success'>Edited Order Successfully</Alert>
+        }
+
+        var elements = [];
+        if(this.state.vendorReviews) {
+            for(var i=0;i<this.state.vendorReviews.length;i++) {
+                var temp = [];
+                for(var j=0;j<this.state.vendorReviews[i].reviews.length;j++) {
+                    temp.push(<li>{this.state.vendorReviews[i].reviews[j]}</li>)
+                }
+                elements.push(<><Card><CardTitle className='m-3'><strong>Product Name : <i>{this.state.vendorReviews[i].product_name}</i></strong></CardTitle>
+                {this.state.vendorReviews[i].total_ratings != 0 ? 
+                <CardText className='m-3'><strong>Product Rating :</strong>
+                    <StarRatingComponent
+                        editing={false}
+                        starCount={5}
+                        value={this.state.vendorReviews[i].rating_sum / this.state.vendorReviews[i].total_ratings}
+                    />
+                    ({(this.state.vendorReviews[i].rating_sum / this.state.vendorReviews[i].total_ratings).toFixed(3)})
+                </CardText> : ''}
+                <CardTitle className='m-3'><strong>Reviews :</strong></CardTitle><ul>{temp}</ul></Card><br/></>)
+            }
         }
 
         return (
@@ -558,6 +676,12 @@ class CustomerView extends Component {
                             />
                         </FormGroup>
                     </Form>
+                    <Modal isOpen={this.state.vendorModal} size='lg' toggle={this.toggleVendor}>
+                        <ModalHeader toggle={this.toggleVendor}>Reviews and Ratings</ModalHeader>
+                        <ModalBody>
+                            {elements}
+                        </ModalBody>
+                    </Modal>
                     <Modal isOpen={this.state.orderModal_isOpen} size='md' toggle={this.orderModalToggle}>
                         <ModalHeader toggle={this.orderModalToggle}>Order {this.state.orderModal_product_name}</ModalHeader>
                         <ModalBody>
@@ -590,6 +714,12 @@ class CustomerView extends Component {
                         <ModalHeader toggle={this.starToggle}>Rate Vendor</ModalHeader>
                         <ModalBody>
                             {starrating}
+                        </ModalBody>
+                    </Modal>
+                    <Modal isOpen={this.state.productstar_isopen} size='sm' toggle={this.productstarToggle}>
+                        <ModalHeader toggle={this.productstarToggle}>Rate Product</ModalHeader>
+                        <ModalBody>
+                            {productstarrating}
                         </ModalBody>
                     </Modal>
                     <div id="search-bar">

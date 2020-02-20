@@ -15,6 +15,7 @@ export const GET_SUCCESS = 'GET_SUCCESS';
 export const ADD_PRODUCT_SUCCESS = 'ADD_PRODUCT_SUCCESS';
 export const ADD_PRODUCT_FAIL = 'ADD_PRODUCT_FAIL';
 export const GET_PRODUCTS = 'GET_PRODUCTS';
+export const GET_ORDERS = 'GET_ORDERS';
 
 export const SORT_BY_PRICE = 0
 export const SORT_BY_QUANTITY = 1

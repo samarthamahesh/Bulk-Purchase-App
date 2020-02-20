@@ -29,7 +29,6 @@ class VendorMenuBar extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log("Update")
         const msg = this.props.msg;
         if(msg != prevProps.msg) {
             if(msg.isError === true && msg.id == GET_ERRORS) {

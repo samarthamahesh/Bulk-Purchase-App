@@ -142,8 +142,43 @@ router.post('/updateVendorRating', (req, res) => {
         })
 })
 
+router.post('/updateProductRating', (req, res) => {
+    const order = req.body.order;
+    const rating = req.body.rating;
+
+    Order.updateOne({_id: order._id}, 
+            {
+                $set: {
+                    product_rating: true
+                }
+            }
+        )
+        .exec(function(err, ret) {
+            Order.updateMany({'product._id': order.product._id},
+                {
+                    $inc: {
+                        'product.rating_sum': rating,
+                        'product.total_ratings': 1
+                    }
+                }
+            )
+            .exec(function(err, ret) {
+                Product.updateMany({_id: order.product._id},
+                        {
+                            $inc: {
+                                rating_sum: rating,
+                                total_ratings: 1
+                            }
+                        }
+                    )
+                    .exec(function(err, ret) {
+                        console.log(ret)
+                    })
+            })
+        })
+})
+
 router.post('/submitreview', (req, res) => {
-    console.log(req.body)
     Order.update({_id: req.body.order_id},
             {
                 $push: {
@@ -171,7 +206,6 @@ router.post('/submitreview', (req, res) => {
 router.post('/edit', (req, res) => {
     const order = req.body.order;
     const diff = req.body.diff;
-    console.log(order)
 
     Order.updateMany({_id: order._id},
             {

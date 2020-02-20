@@ -26,7 +26,6 @@ export default function(state = initialState, action) {
             };
         case ORDER_SUCCESS:
         case GET_SUCCESS:
-            console.log("SUCCESS")
             return {
                 msg: action.payload.msg,
                 status: action.payload.status,
