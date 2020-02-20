@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const mongoURI = "mongodb+srv://samarthamahesh:samartha@bulk-purchase-app-tylck.gcp.mongodb.net/test?retryWrites=true&w=majority";
+const mongoURI = "mongodb://127.0.0.1:27017/bulk_purchase_app";
 
 mongoose
     .connect(mongoURI, {
