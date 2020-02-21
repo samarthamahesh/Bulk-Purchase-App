@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const mongoURI = "mongodb://127.0.0.1:27017/bulk_purchase_app";
+const mongoURI = "mongodb+srv://samarthamahesh:samartha@bulk-purchase-app-tylck.gcp.mongodb.net/test?retryWrites=true&w=majority";
 
 mongoose
     .connect(mongoURI, {
@@ -27,13 +27,13 @@ app.use(passport.initialize());
 
 require('./config/passport')(passport);
 
-// if(process.env.NODE_ENV === 'production') {
+if(process.env.NODE_ENV === 'production') {
     app.use(express.static('../frontend/build'));
 
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, '..', 'frontend', 'build', 'index.html'));
     });
-// }
+}
 
 const PORT = process.env.PORT || 5000;
 
