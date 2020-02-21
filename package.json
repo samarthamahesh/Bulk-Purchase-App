@@ -1,15 +1,12 @@
 {
   "name": "Bulk-Purchase-App",
   "version": "1.0.0",
-  "description": "",
+  "description": "**__Samartha S M__**",
   "main": "index.js",
   "scripts": {
-    "frontend-install": "npm install --prefix frontend",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
-    "frontend": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run frontend\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
+    "heroku-postbuild": "npm install --prefix frontend && npm run build --prefix frontend"
   },
   "repository": {
     "type": "git",
@@ -21,18 +18,5 @@
   "bugs": {
     "url": "https://github.com/samarthamahesh/Bulk-Purchase-App/issues"
   },
-  "homepage": "https://github.com/samarthamahesh/Bulk-Purchase-App#readme",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "concurrently": "^5.1.0",
-    "config": "^3.2.5",
-    "cors": "^2.8.5",
-    "dependencies": "0.0.1",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.8.11",
-    "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0",
-    "react-star-rating-component": "^1.4.1"
-  }
+  "homepage": "https://github.com/samarthamahesh/Bulk-Purchase-App#readme"
 }
