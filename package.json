@@ -1,16 +1,12 @@
 {
-  "name": "Bulk-Purchase-App",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "**__Samartha S M__**",
-  "main": "index.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/server.js",
+    "start": "node server.js",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/samarthamahesh/Bulk-Purchase-App.git"
   },
   "keywords": [],
   "author": "",
@@ -24,9 +20,5 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "path": "^0.12.7"
-  },
-  "bugs": {
-    "url": "https://github.com/samarthamahesh/Bulk-Purchase-App/issues"
-  },
-  "homepage": "https://github.com/samarthamahesh/Bulk-Purchase-App#readme"
+  }
 }
