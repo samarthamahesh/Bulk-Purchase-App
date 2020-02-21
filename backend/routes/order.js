@@ -248,9 +248,7 @@ router.post('/edit', (req, res) => {
                                     }
                                 )
                                 .exec(function (err, ret) {
-                                    res.json({
-                                        'success': true
-                                    })
+                                    console.log(ret)
                                 })
                             })
                     })

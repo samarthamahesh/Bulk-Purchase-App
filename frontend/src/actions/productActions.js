@@ -85,6 +85,9 @@ export const statusProduct = (product, status) => dispatch => {
     });
 
     axios.post("http://localhost:5000/api/product/dispatch", body, config)
+        .then(res => {
+            dispatch(returnSuccess(res.data, res.status))
+        })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status, GET_ERRORS));
         });

@@ -275,7 +275,10 @@ class CustomerView extends Component {
     orderModalToggle() {
         this.setState({
                 orderModal_isOpen: !this.state.orderModal_isOpen,
-                placed: null
+                placed: null,
+                orderModal_msg: null,
+                msg: null,
+                ismsgError: null
         })
     }
 
@@ -378,8 +381,8 @@ class CustomerView extends Component {
 
         axios
             .post('http://localhost:5000/api/order/updateVendorRating', obj)
-            .then(this.starToggle())
             .then(this.props.listOrderedProducts(user))
+            .then(this.starToggle())
     }
 
     submitproductRating(e) {
@@ -392,8 +395,8 @@ class CustomerView extends Component {
 
         axios
             .post('http://localhost:5000/api/order/updateProductRating', obj)
-            .then(this.productstarToggle())
             .then(this.props.listOrderedProducts(user))
+            .then(this.productstarToggle())
     }
 
     listReviews(vendor) {
@@ -444,14 +447,14 @@ class CustomerView extends Component {
                             <CardText>Product Name : <strong>{ product.product_name }</strong></CardText>
                             <CardText>Product Bundle Price : <strong>{ product.bundle_price }</strong></CardText>
                             <CardText>Product Bundles Remaining : <strong>{ product.bundle_quantity }</strong></CardText>
-                            { product.vendor.total_ratings != 0 ? <CardText>Vendor Rating : 
+                            { <CardText>Vendor Rating : 
                                 <StarRatingComponent
                                     editing={false}
                                     starCount={5}
                                     value={product.vendor.rating_sum / product.vendor.total_ratings}
                                 />
                                 ({(product.vendor.rating_sum / product.vendor.total_ratings).toFixed(3)})
-                            </CardText> : ''}
+                            </CardText> }
                             <Button color='info' value={ product._id } onClick={ this.updateSelectedModal } className='float-left'>Order</Button>
                             <Button color='warning' value={ product.vendor._id } onClick={ this.updateVendorModal } className='float-right'>Vendor Products Reviews</Button>
                         </CardBody>
@@ -469,19 +472,20 @@ class CustomerView extends Component {
                             <CardText>Vendor Name : <strong>{ order.product.vendor.name }</strong></CardText>
                             <CardText>Product Name : <strong>{ order.product.product_name }</strong></CardText>
                             <CardText>Order Quantity : <strong>{ order.quantity }</strong></CardText>
-                            { order.product.vendor.total_ratings != 0 ? <CardText>Vendor Rating : 
+                            { <CardText>Vendor Rating : 
                                 <StarRatingComponent
                                     editing={false}
                                     starCount={5}
                                     value={order.product.vendor.rating_sum / order.product.vendor.total_ratings}
                                 />
                                 ({(order.product.vendor.rating_sum / order.product.vendor.total_ratings).toFixed(3)})
-                            </CardText> : ''}
+                            </CardText>}
                             { order.status ===  ORDER_WAITING ? <CardText>Product Bundle Quantity Left : <strong>{ order.product.bundle_quantity }</strong></CardText> : ''}
                             { order.status === ORDER_WAITING ? <Button className='mb-3' color='warning' value={ order._id } onClick={this.openeditModal}>Edit Order</Button> : ''}
                             { !order.vendor_rating ? <Button className='float-right' value={order._id} color='info' onClick={this.updateStarModal}>Rate the Vendor</Button> : ''}
+                            <br/><br/>
                             <CardText>
-                                { order.status === ORDER_DISPATCHED && !order.product_rating ? <><br/><br/><Button className='mb-3 float-left' color='info' value={ order._id } onClick={this.updateproductStarModal}>Rate Product</Button></> : ''}
+                                { order.status === ORDER_DISPATCHED && !order.product_rating ? <Button className='mb-3 float-left' color='info' value={ order._id } onClick={this.updateproductStarModal}>Rate Product</Button> : ''}
                                 { order.status === ORDER_DISPATCHED && !order.product_review ? <Button className='float-right' color='info' value={order._id} onClick={this.openReviewModal}>Add a Product Review</Button> : ''}
                             </CardText>
                             <CardText>

@@ -101,12 +101,12 @@ class LoginModal extends Component {
                         ) : null}
                         <Form onSubmit={this.onSubmit} id='login_form'>
                             <FormGroup>
-                                <Label for='email'>Email</Label>
+                                <Label for='email'>Username</Label>
                                 <Input
                                     type='text'
                                     name='email'
                                     id='email'
-                                    placeholder='Email'
+                                    placeholder='Username'
                                     className='mb-3'
                                     onChange={this.onChange}
                                 />

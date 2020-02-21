@@ -138,12 +138,12 @@ class RegisterModal extends Component {
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label for='email'>Email</Label>
+                                <Label for='email'>Username</Label>
                                 <Input
-                                    type='email'
+                                    type='text'
                                     name='email'
                                     id='email'
-                                    placeholder='Email'
+                                    placeholder='Username'
                                     className='mb-3'
                                     onChange={this.onChange}
                                 />

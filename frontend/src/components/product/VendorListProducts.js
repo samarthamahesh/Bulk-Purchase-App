@@ -68,8 +68,8 @@ class VendorListProducts extends Component {
 
     dispatchProduct(e) {
         const product = this.state.products.find(element => element._id === e.target.value);
-        this.props.statusProduct(product, PRODUCT_DISPATCHED);
-        this.props.listProducts('vendor._id', this.props.auth.user._id, PRODUCT_DISPATCH_READY)
+        this.props.statusProduct(product, PRODUCT_DISPATCHED)
+        this.props.listProducts('vendor._id', this.props.auth.user._id, PRODUCT_DISPATCH_READY);
     }
 
     delete(e) {
