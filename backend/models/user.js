@@ -32,10 +32,6 @@ var User = new Schema({
         type: Number,
         required: false,
         default: 0
-    },
-    reviews: {
-        type: Array,
-        required: false
     }
 });
 

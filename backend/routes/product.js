@@ -137,7 +137,8 @@ router.post('/unordered', (req, res) => {
                 },
                 bundle_quantity: {
                     $gt: 0
-                }
+                },
+                status: productStatus.WAITING
             })
             .then(result => {
                 res.json({

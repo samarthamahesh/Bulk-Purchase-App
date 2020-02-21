@@ -63,9 +63,19 @@ class RegisterModal extends Component {
     }
 
     onSelect(e) {
+        if(e.target.value === 'Vendor') {
         this.setState({
-            isVendor: e.target.value === 'Vendor' ? true : false
-        });
+                isVendor: true
+            })
+        } else if(e.target.value === 'Customer') {
+            this.setState({
+                isVendor: false
+            })
+        } else {
+            this.setState({
+                isVendor: null
+            })
+        }
     }
 
     componentDidUpdate(prevProps) {

@@ -399,6 +399,7 @@ class CustomerView extends Component {
     listReviews(vendor) {
         axios.get(`http://localhost:5000/api/product/vendorReviews/${vendor._id}`)
             .then(res => {
+                console.log(this.state.vendorReviews)
                 this.setState({
                     vendorReviews: res.data.reviews
                 })
@@ -478,15 +479,12 @@ class CustomerView extends Component {
                             </CardText> : ''}
                             { order.status ===  ORDER_WAITING ? <CardText>Product Bundle Quantity Left : <strong>{ order.product.bundle_quantity }</strong></CardText> : ''}
                             { order.status === ORDER_WAITING ? <Button className='mb-3' color='warning' value={ order._id } onClick={this.openeditModal}>Edit Order</Button> : ''}
-                            <br/><br/>
+                            { !order.vendor_rating ? <Button className='float-right' value={order._id} color='info' onClick={this.updateStarModal}>Rate the Vendor</Button> : ''}
                             <CardText>
-                                { order.status === ORDER_DISPATCHED && !order.product_rating ? <Button className='mb-3 float-left' color='info' value={ order._id } onClick={this.updateproductStarModal}>Rate Product</Button> : ''}
+                                { order.status === ORDER_DISPATCHED && !order.product_rating ? <><br/><br/><Button className='mb-3 float-left' color='info' value={ order._id } onClick={this.updateproductStarModal}>Rate Product</Button></> : ''}
                                 { order.status === ORDER_DISPATCHED && !order.product_review ? <Button className='float-right' color='info' value={order._id} onClick={this.openReviewModal}>Add a Product Review</Button> : ''}
                             </CardText>
-                            <br/><br/>
                             <CardText>
-                                { !order.vendor_rating ? <Button className='float-left' value={order._id} color='info' onClick={this.updateStarModal}>Rate the Vendor</Button> : ''}
-                                { !order.vendor_review ? <Button className='float-right' color='info' value={order._id} onClick={this.openvendorReviewModal}>Add a Vendor Review</Button> : ''}
                             </CardText>
                         </CardBody>
                     </Card>
@@ -705,7 +703,6 @@ class CustomerView extends Component {
                         <ModalBody>
                             { this.state.reviewsubmitted ? <Alert color='success'>{this.state.reviewmsg}</Alert> : '' }
                             <br/>
-                            {starrating}
                             {inputreview}
                         </ModalBody>
                         {reviewButton}

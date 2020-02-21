@@ -8,8 +8,7 @@ const router = express.Router()
 
 router.post('/register', (req, res) => {
     const { name, email, password, isVendor } = req.body;
-
-    if(!name || !email || !password) {
+    if(!name || !email || !password || isVendor == null) {
         return res.status(400).json({ msg: "Please enter all fields" });
     }
 

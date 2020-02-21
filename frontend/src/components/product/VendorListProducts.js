@@ -4,6 +4,7 @@ import { listProducts, statusProduct } from '../../actions/productActions';
 import { Container, Button, Card, CardBody, CardText, Row, Col, Modal, ModalHeader, ModalBody } from "reactstrap";
 import { PRODUCT_WAITING, PRODUCT_DISPATCH_READY, PRODUCT_DISPATCHED, PRODUCT_DELETED } from '../../actions/actionTypes';
 import axios from 'axios';
+import StarRatingComponent from "react-star-rating-component";
 
 class VendorListProducts extends Component {
     constructor(props) {
@@ -122,7 +123,14 @@ class VendorListProducts extends Component {
                                 <CardBody>
                                     <CardText>Product Name : <strong>{ product.product_name }</strong></CardText>
                                     <CardText>Product Bundle Price : <strong>{ product.bundle_price }</strong></CardText>
-                                    <CardText>Product Rating : </CardText>
+                                    <CardText>Product Rating :
+                                        <StarRatingComponent
+                                            editing={false}
+                                            starCount={5}
+                                            value={product.rating_sum / product.total_ratings}
+                                        />
+                                        ({(product.rating_sum / product.total_ratings).toFixed(3)})
+                                    </CardText>
                                     <CardText>
                                         <Button color='info' value={ product._id } onClick={this.openReview}>Product Reviews</Button>
                                     </CardText>
@@ -136,7 +144,6 @@ class VendorListProducts extends Component {
             cardProducts = ""
         }
 
-        // var reviewDisplay;
         var elements = []
         if(this.state.reviews){
             for(var i=0;i<this.state.reviews.length;i++) {
