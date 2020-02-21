@@ -1,3 +1,4 @@
+
 import {
     REGISTER_SUCCESS,
     REGISTER_FAIL,
@@ -31,7 +32,7 @@ export const request_headers = getState => {
 export const loadUser = () => (dispatch, getState) => {
     dispatch({type: LOADING_USER});
     axios
-        .get('http://localhost:5000/api/auth/user', request_headers(getState))
+        .get('/api/auth/user', request_headers(getState))
         .then(res => {
             dispatch({
                 type: LOADED_USER,
@@ -58,7 +59,7 @@ export const register = (credentials) => (dispatch) => {
     const body = JSON.stringify(credentials);
 
     axios
-        .post('http://localhost:5000/api/auth/register', body, config)
+        .post('/api/auth/register', body, config)
         .then(res => {
             dispatch(returnSuccess(res.data, res.status, GET_SUCCESS));
             dispatch({
@@ -83,7 +84,7 @@ export const login = (credentials) => (dispatch) => {
 
     const body = JSON.stringify(credentials);
     axios
-        .post('http://localhost:5000/api/auth/login', body, config)
+        .post('/api/auth/login', body, config)
         .then(res => {
             dispatch({
                 type: LOGIN_SUCCESS,

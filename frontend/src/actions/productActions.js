@@ -24,7 +24,7 @@ export const addProduct = (itemDescription) => dispatch => {
     const body = JSON.stringify(itemDescription);
 
     axios
-        .post('http://localhost:5000/api/product/add', body, config)
+        .post('/api/product/add', body, config)
         .then(res => {
             dispatch(returnSuccess(res.data, res.status, GET_SUCCESS));
             dispatch({
@@ -41,7 +41,7 @@ export const addProduct = (itemDescription) => dispatch => {
 }
 
 export const listProducts = (field, search_string, status) => dispatch => {
-    const search_url = `http://localhost:5000/api/product/search/${field}/${search_string}/${status}`;
+    const search_url = `/api/product/search/${field}/${search_string}/${status}`;
     axios
         .get(search_url)
         .then(res => {
@@ -64,7 +64,7 @@ export const orderProduct = (order) => dispatch => {
 
     const body = JSON.stringify(order);
 
-    axios.post("http://localhost:5000/api/order", body, config)
+    axios.post("/api/order", body, config)
         .then(res => {
             dispatch(returnSuccess(res.data, res.status, ORDER_SUCCESS))
         })
@@ -84,7 +84,7 @@ export const statusProduct = (product, status) => dispatch => {
         status
     });
 
-    axios.post("http://localhost:5000/api/product/dispatch", body, config)
+    axios.post("/api/product/dispatch", body, config)
         .then(res => {
             dispatch(returnSuccess(res.data, res.status))
         })
@@ -107,7 +107,7 @@ export const listUnorderedProducts = (product_name, user) => dispatch => {
         product_name: product_name
     })
 
-    axios.post('http://localhost:5000/api/product/unordered', body, config)
+    axios.post('/api/product/unordered', body, config)
         .then(res => {
             dispatch({
                 type: GET_ORDERS,
@@ -127,7 +127,7 @@ export const listOrderedProducts = (user) => dispatch => {
     }
 
     const body = JSON.stringify(user)
-    axios.post('http://localhost:5000/api/order/list', body, config)
+    axios.post('/api/order/list', body, config)
         .then(res => {
             dispatch({
                 type: GET_ORDERS,
