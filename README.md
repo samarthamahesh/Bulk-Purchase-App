@@ -1,6 +1,6 @@
 # Bulk Purchase App
 
-**__Samartha S M__**
+**Samartha S M**
 
 *2018101094*
 
