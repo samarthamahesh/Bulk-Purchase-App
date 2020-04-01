@@ -1,9 +1,5 @@
 # Bulk Purchase App
 
-**Samartha S M**
-
-*2018101094*
-
 ## Introduction
 
 There are times when one wants to buy an item, only to find that buying them in bulk would make it much cheaper as opposed to buying a single unit. The app will have an option for sellers to host their products along with the minimum bulk dispatch quantity. Various customers can select from the listed products and order them with their own required quantity. When enough orders are placed for the product and bulk quantity requirements are met, the vendor can dispatch the order.
